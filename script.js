@@ -46,12 +46,10 @@ function getJsonKey(category, brigadeCol) {
 // ==========================================
 // 2. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ДЛЯ ТАБЛИЦЫ
 // ==========================================
-
 function clearRowData(row) {
   if (!row || !row.cells) return;
   const cells = row.cells;
   
-  // Безопасно очищаем ячейки, только если они физически существуют в этой строке
   if (cells[2]) cells[2].textContent = ""; // ID
   if (cells[3]) cells[3].textContent = ""; // Роль
   if (cells[4]) cells[4].textContent = ""; // Дата
@@ -61,7 +59,6 @@ function fillRowData(row, info) {
   if (!row || !row.cells || !info) return;
   const cells = row.cells;
   
-  // Безопасно заполняем ячейки, только если они физически существуют в этой строке
   if (cells[2]) cells[2].textContent = info.id || "";
   if (cells[3]) cells[3].textContent = info.role || "";
   if (cells[4]) cells[4].textContent = info.date || "";
