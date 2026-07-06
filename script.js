@@ -1,266 +1,267 @@
-// База сотрудников изначально пустая (загрузится из сети)
+// ==========================================
+// 1. ИНИЦИАЛИЗАЦИЯ И АВТОЗАГРУЗКА БАЗЫ ЛЮДЕЙ
+// ==========================================
+// Пытаемся сразу достать сохраненную базу людей из памяти браузера
 let staffDatabase = JSON.parse(localStorage.getItem('my_staff_base')) || {};
 let allNames = Object.keys(staffDatabase);
 const datalist = document.getElementById('employees-list');
 
-// --- МАППИНГ: как ключи JSON соответствуют строкам и колонкам на странице ---
-		// Формат: "ключ-из-json": { category: "название категории слева", brigadeCol: номер колонки бригады (1–4) }
-		const jsonToGridMap = {
-		  "br1-crystals":   { category: "Кристаллы",      brigadeCol: 1 },
-		  "br2-crystals":   { category: "Кристаллы",      brigadeCol: 2 },
-		  "br3-crystals":   { category: "Кристаллы",      brigadeCol: 3 },
-		  "br4-crystals":   { category: "Кристаллы",      brigadeCol: 4 },
-		  "br1-filters":    { category: "Фильтра",        brigadeCol: 1 },
-		  "br2-filters":    { category: "Фильтра",        brigadeCol: 2 },
-		  "br3-filters":    { category: "Фильтра",        brigadeCol: 3 },
-		  "br4-filters":    { category: "Фильтра",        brigadeCol: 4 },
-		  "br1-regen":      { category: "Регенерация",    brigadeCol: 1 },
-		  "br2-regen":      { category: "Регенерация",    brigadeCol: 2 },
-		  "br3-regen":      { category: "Регенерация",    brigadeCol: 3 },
-		  "br4-regen":      { category: "Регенерация",    brigadeCol: 4 },
-		  "br1-cc-drivers": { category: "Машинисты ЦК",   brigadeCol: 1 },
-		  "br2-cc-drivers": { category: "Машинисты ЦК",   brigadeCol: 2 },
-		  "br3-cc-drivers": { category: "Машинисты ЦК",   brigadeCol: 3 },
-		  "br4-cc-drivers": { category: "Машинисты ЦК",   brigadeCol: 4 }
-		};
+// --- МАППИНГ: соответствие JSON-ключей ячейкам таблицы ---
+const jsonToGridMap = {
+  "br1-crystals": { category: "Кристаллы", brigadeCol: 1 },
+  "br1-mechanics": { category: "Механики", brigadeCol: 1 },
+  "br1-operators": { category: "Операторы", brigadeCol: 1 },
+  "br1-masters": { category: "Мастера", brigadeCol: 1 },
+  "br1-senior": { category: "Старшие", brigadeCol: 1 },
+
+  "br2-crystals": { category: "Кристаллы", brigadeCol: 2 },
+  "br2-mechanics": { category: "Механики", brigadeCol: 2 },
+  "br2-operators": { category: "Операторы", brigadeCol: 2 },
+  "br2-masters": { category: "Мастера", brigadeCol: 2 },
+  "br2-senior": { category: "Старшие", brigadeCol: 2 },
+
+  "br3-crystals": { category: "Кристаллы", brigadeCol: 3 },
+  "br3-mechanics": { category: "Механики", brigadeCol: 3 },
+  "br3-operators": { category: "Операторы", brigadeCol: 3 },
+  "br3-masters": { category: "Мастера", brigadeCol: 3 },
+  "br3-senior": { category: "Старшие", brigadeCol: 3 },
+
+  "br4-crystals": { category: "Кристаллы", brigadeCol: 4 },
+  "br4-mechanics": { category: "Механики", brigadeCol: 4 },
+  "br4-operators": { category: "Операторы", brigadeCol: 4 },
+  "br4-masters": { category: "Мастера", brigadeCol: 4 },
+  "br4-senior": { category: "Старшие", brigadeCol: 4 }
+};
+
+// Поиск ключа маппинга по категории и номеру бригады
+function getJsonKey(category, brigadeCol) {
+  for (const [key, value] of Object.entries(jsonToGridMap)) {
+    if (value.category === category && value.brigadeCol === brigadeCol) {
+      return key;
+    }
+  }
+  return null;
+}
+
+// ==========================================
+// 2. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ДЛЯ ТАБЛИЦЫ
+// ==========================================
+
 function clearRowData(row) {
-    		  const idCell = row.querySelector('.col-id');
-    		  const roleCell = row.querySelector('.col-role');
-    		  const dateCell = row.querySelector('.col-date');
-    		  if (idCell) idCell.textContent = '';
-    		  if (roleCell) roleCell.textContent = '';
-    		  if (dateCell) dateCell.textContent = '';
-		}
+  const cells = row.cells;
+  cells[2].textContent = ""; // ID
+  cells[3].textContent = ""; // Роль
+  cells[4].textContent = ""; // Дата
+}
 
-		function fillRowData(row, name) {
-    		  const employee = staffDatabase[name];
-    		  if (!employee) {
-    			clearRowData(row);
-    			return;
-    		  }
-    		  const idCell = row.querySelector('.col-id');
-    		  const roleCell = row.querySelector('.col-role');
-    		  const dateCell = row.querySelector('.col-date');
-    		  if (idCell) idCell.textContent = employee.id;
-    		  if (roleCell) roleCell.textContent = employee.role;
-    		  if (dateCell) dateCell.textContent = employee.date;
-		}
+function fillRowData(row, info) {
+  const cells = row.cells;
+  cells[2].textContent = info.id || "";
+  cells[3].textContent = info.role || "";
+  cells[4].textContent = info.date || "";
+}
 
-		function updateDatalist() {
-    		  if (!datalist) return;
-    		  const busyNames = Array.from(document.querySelectorAll('.select-input'))
-    			.map(input => input.value.trim())
-    			.filter(Boolean);
-    		  const freeNames = allNames.filter(name => !busyNames.includes(name));
-    		  datalist.innerHTML = '';
-    		  freeNames.forEach(name => {
-    			const option = document.createElement('option');
-    			option.value = name;
-    			datalist.appendChild(option);
-    		  });
-		}
+function updateDatalist() {
+  if (!datalist) return;
+  datalist.innerHTML = "";
+  allNames.forEach(name => {
+    const option = document.createElement('option');
+    option.value = name;
+    datalist.appendChild(option);
+  });
+}
 
-		function handleInput(event) {
-    		  const input = event.target;
-    		  if (!input.classList.contains('select-input')) return;
-    
-    		  const row = input.closest('tr');
-    		  if (!row) return;
-    
-    		  const enteredName = input.value.trim();
-    
-    		  if (!enteredName) {
-      			clearRowData(row);
-      			updateDatalist();
-      			return;
-    		  }
-    
-    		  if (staffDatabase[enteredName]) {
-      			fillRowData(row, enteredName);
-      		  } else {
-      			clearRowData(row);
-    		  }
-    
-    		  updateDatalist();
-		}
+function handleInput(e) {
+  if (!e.target.classList.contains('emp-input')) return;
+  const input = e.target;
+  const val = input.value.trim();
+  const row = input.closest('tr');
+  if (!row) return;
 
-		document.addEventListener('input', handleInput);
+  if (staffDatabase[val]) {
+    fillRowData(row, staffDatabase[val]);
+  } else {
+    clearRowData(row);
+  }
+}
 
-		// Инициализация при загрузке
-		document.querySelectorAll('.select-input').forEach(input => {
-		  if (input.value.trim() !== "") {
-			handleInput({ target: input });
-		  }
-		});
-		updateDatalist();
+// Навешиваем слушатели на таблицу
+const table = document.querySelector('table');
+if (table) {
+  table.addEventListener('input', handleInput);
+  table.addEventListener('change', handleInput); // Для отслеживания выбора мышкой
+}
 
-// --- ЛОГИКА ЗАГРУЗКИ БАЗЫ (из локальной сети) ---
+// ==========================================
+// 3. ОБРАБОТКА ЗАГРУЗКИ ВАШЕГО ФАЙЛА (people.json)
+// ==========================================
 const staffFileInp = document.getElementById('staff-file-input');
 if (staffFileInp) {
   staffFileInp.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
     const reader = new FileReader();
     reader.onload = (evt) => {
       try {
         staffDatabase = JSON.parse(evt.target.result);
         allNames = Object.keys(staffDatabase);
-		localStorage.setItem('my_staff_base', JSON.stringify(staffDatabase));  
+        
+        // Намертво сохраняем эту базу людей в память браузера
+        localStorage.setItem('my_staff_base', JSON.stringify(staffDatabase));
+        
         updateDatalist();
-        alert('База сотрудников обновлена!');
-      } catch (err) { alert('Ошибка JSON базы'); }
+        alert('База сотрудников успешно загружена и сохранена в память!');
+        forceSaveToLocalStorage(); // Сразу обновляем состояние памяти
+      } catch (err) {
+        alert('Ошибка: Файл имеет неверный формат JSON.');
+      }
     };
     reader.readAsText(file);
   });
 }
 
-    	// ==========================================
-		// ЛОГИКА ЗАГРУЗКИ И СОХРАНЕНИЯ
-		// ==========================================
+// ==========================================
+// 4. ЛОГИКА ЗАГРУЗКИ / СОХРАНЕНИЯ РАСПИСАНИЯ
+// ==========================================
 
-		const btnLoad = document.getElementById('btn-load');
-		const btnSave = document.getElementById('btn-save');
+function saveSchedule() {
+  const data = {};
+  for (const key of Object.keys(jsonToGridMap)) {
+    data[key] = [];
+  }
 
-		if (btnLoad) {
-		  btnLoad.addEventListener('click', async () => {
-			try {
-			  // Здесь указываем путь к файлу на твоём ресурсе
-			  const response = await fetch('schedule.json');
-			  if (!response.ok) throw new Error('Не удалось загрузить файл');
-			  const data = await response.json();
-			  loadSchedule(data);
-			  alert('Расписание загружено!');
-			} catch (e) {
-			  console.error(e);
-			  alert('Ошибка при загрузке: ' + e.message);
-			}
-		  });
-		}
+  const rows = document.querySelectorAll('table tbody tr');
+  let currentCategory = "";
 
-		if (btnSave) {
-		  btnSave.addEventListener('click', () => {
-			// Спрашиваем имя файла у пользователя
-			let fileName = prompt('Введите имя файла для сохранения:', 'schedule');
-			
-			// Если пользователь нажал "Отмена", прекращаем работу
-			if (fileName === null) return; 
-			
-			// Если ввели пустоту, ставим имя по умолчанию
-			fileName = fileName.trim() || 'schedule';
-			
-			const data = saveSchedule();
-			const jsonString = JSON.stringify(data, null, 2);
-			const blob = new Blob([jsonString], { type: 'application/json;charset=utf-8;' });
-			const url = URL.createObjectURL(blob);
-			
-			const a = document.createElement('a');
-			a.href = url;
-			a.download = `${fileName}.json`; // Используем введенное имя
-			
-			document.body.appendChild(a);
-			a.click();
-			document.body.removeChild(a);
-			URL.revokeObjectURL(url);
-		  });
-		}
+  rows.forEach(row => {
+    const catCell = row.querySelector('.category-cell');
+    if (catCell) {
+      currentCategory = catCell.textContent.trim();
+    }
+    if (!currentCategory) return;
 
-		// Загрузка: расставляем сотрудников по ячейкам
-		function loadSchedule(data) {
-    		  // Очищаем все инпуты перед загрузкой, чтобы не было дублей
-    		  document.querySelectorAll('.select-input').forEach(inp => {
-    			inp.value = '';
-    			clearRowData(inp.closest('tr'));
-    		  });
-    		  updateDatalist();
+    const inputs = row.querySelectorAll('.emp-input');
+    inputs.forEach((input, index) => {
+      const brigadeCol = index + 1;
+      const name = input.value.trim();
+      if (name) {
+        const key = getJsonKey(currentCategory, brigadeCol);
+        if (key) {
+          data[key].push(name);
+        }
+      }
+    });
+  });
+  return data;
+}
 
-		  // Проходим по всем ключам JSON
-		  for (const key in data) {
-      			const mapping = jsonToGridMap[key];
-      			if (!mapping) continue; // неизвестный ключ — пропускаем
-      
-      			const categoryName = mapping.category;
-      			const brigadeCol = mapping.brigadeCol; // 1..4
-      
-      			// Находим строку категории
-      			const rows = Array.from(document.querySelectorAll('.category-row'));
-      			let categoryRow = null;
-      			for (const r of rows) {
-      			  const title = r.querySelector('.row-title')?.textContent?.trim();
-      			  if (title === categoryName) {
-      				categoryRow = r;
-      				break;
-      			  }
-      			}
-      			if (!categoryRow) continue;
-      
-      			// В каждой категории есть ячейки по бригадам: td:nth-child(2), (3), (4), (5)
-      			const cells = categoryRow.querySelectorAll('td');
-      			const targetCell = cells[brigadeCol]; // brigadeCol 1..4 → индекс 1..4 (0-based, поэтому [brigadeCol])
-      			if (!targetCell) continue;
-      
-      			// Внутри ячейки — таблица .emp-table (или .empST-table для старших)
-      			// Для простоты считаем, что используем .emp-table и заполняем строки сверху вниз
-      			const innerTable = targetCell.querySelector('.emp-table') || targetCell.querySelector('.empST-table');
-      			if (!innerTable) continue;
-      
-      			const employees = data[key] || [];
-      			const inputs = Array.from(innerTable.querySelectorAll('input.select-input'));
-      
-      			// Заполняем столько строк, сколько есть в массиве (но не больше, чем есть инпутов)
-      			employees.forEach((name, idx) => {
-      			  if (idx < inputs.length) {
-      				inputs[idx].value = name;
-      				handleInput({ target: inputs[idx] }); // вызовет автозаполнение ID/роли/даты
-      			  }
-      			});
-      		  }
-		}
+function loadSchedule(data) {
+  if (!data) return;
+  const rows = document.querySelectorAll('table tbody tr');
+  let currentCategory = "";
 
-		// Сохранение: собираем данные со страницы в JSON
-		function saveSchedule() {
-    		  const result = {};
-    
-    		  const rows = Array.from(document.querySelectorAll('.category-row'));
-    		  rows.forEach(row => {
-    			const categoryName = row.querySelector('.row-title')?.textContent?.trim();
-    			if (!categoryName) return;
-    
-    			const cells = row.querySelectorAll('td');
-    			// ячейки бригад — это индексы 1,2,3,4 (соответствует бригадам 1–4)
-    			for (let brigadeCol = 1; brigadeCol <= 4; brigadeCol++) {
-    			  const cell = cells[brigadeCol];
-    			  if (!cell) continue;
-    
-    			  const innerTable = cell.querySelector('.emp-table') || cell.querySelector('.empST-table');
-    			  if (!innerTable) continue;
-    
-    			  const inputs = innerTable.querySelectorAll('input.select-input');
-    			  const names = Array.from(inputs)
-    				.map(inp => inp.value.trim())
-    				.filter(Boolean); // только непустые значения
-    
-    			  if (names.length === 0) continue;
-    
-    			  // Ищем ключ JSON по категории и бригаде
-    			  const key = getJsonKey(categoryName, brigadeCol);
-    			  if (key) {
-    				result[key] = names;
-    			  }
-    			}
-    		  });    
-    		  return result;
-		}
+  // Очищаем инпуты и ячейки перед загрузкой
+  document.querySelectorAll('.emp-input').forEach(inp => inp.value = "");
+  rows.forEach(row => { if(!row.querySelector('.category-cell')) clearRowData(row); });
 
-// Автосохранение при любом изменении инпутов
-document.addEventListener('input', () => {
+  const counters = {};
+  for (const key of Object.keys(jsonToGridMap)) {
+    counters[key] = 0;
+  }
+
+  rows.forEach(row => {
+    const catCell = row.querySelector('.category-cell');
+    if (catCell) {
+      currentCategory = catCell.textContent.trim();
+    }
+    if (!currentCategory) return;
+
+    const inputs = row.querySelectorAll('.emp-input');
+    inputs.forEach((input, index) => {
+      const brigadeCol = index + 1;
+      const key = getJsonKey(currentCategory, brigadeCol);
+      if (key && data[key]) {
+        const list = data[key];
+        const currentIdx = counters[key];
+        if (currentIdx < list.length) {
+          const name = list[currentIdx];
+          input.value = name;
+          if (staffDatabase[name]) {
+            fillRowData(row, staffDatabase[name]);
+          }
+          counters[key]++;
+        }
+      }
+    });
+  });
+}
+
+// Ручное скачивание файла schedule.json
+const btnSave = document.getElementById('btn-save');
+if (btnSave) {
+  btnSave.addEventListener('click', () => {
+    const data = saveSchedule();
+    const jsonString = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'schedule.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+}
+
+// Ручная загрузка файла расписания через кнопку «Загрузить»
+const btnLoad = document.getElementById('btn-load');
+if (btnLoad) {
+  btnLoad.addEventListener('click', () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        try {
+          const data = JSON.parse(evt.target.result);
+          loadSchedule(data);
+          forceSaveToLocalStorage(); // Запоминаем загруженное расписание
+        } catch (err) {
+          alert('Ошибка чтения файла расписания');
+        }
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  });
+}
+
+// ==========================================
+// 5. АВТОМАТИЧЕСКОЕ ПЕРЕОПРЕДЕЛЕНИЕ И ПАМЯТЬ
+// ==========================================
+
+// Принудительное сохранение текущей таблицы в память браузера
+function forceSaveToLocalStorage() {
   const currentSchedule = saveSchedule();
   localStorage.setItem('my_current_schedule', JSON.stringify(currentSchedule));
-});
+}
 
-// Автозагрузка расписания при старте страницы
-document.addEventListener('DOMContentLoaded', () => {
-  const savedSchedule = localStorage.getItem('my_current_schedule');
-  if (savedSchedule) {
+// Отслеживаем любые изменения на странице для мгновенного сохранения
+document.addEventListener('input', forceSaveToLocalStorage);
+document.addEventListener('change', forceSaveToLocalStorage);
+
+// При первом запуске страницы восстанавливаем и базу людей, и расставленное расписание
+updateDatalist();
+
+const savedSchedule = localStorage.getItem('my_current_schedule');
+if (savedSchedule) {
+  // Небольшая задержка, чтобы HTML-таблица точно успела построиться в браузере
+  setTimeout(() => {
     loadSchedule(JSON.parse(savedSchedule));
-  }
-});
+  }, 100);
+}
