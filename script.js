@@ -1,6 +1,6 @@
 // База сотрудников изначально пустая (загрузится из сети)
-let staffDatabase = {};
-let allNames = [];
+let staffDatabase = JSON.parse(localStorage.getItem('my_staff_base')) || {};
+let allNames = Object.keys(staffDatabase);
 const datalist = document.getElementById('employees-list');
 
 // --- МАППИНГ: как ключи JSON соответствуют строкам и колонкам на странице ---
@@ -105,6 +105,7 @@ if (staffFileInp) {
       try {
         staffDatabase = JSON.parse(evt.target.result);
         allNames = Object.keys(staffDatabase);
+		localStorage.setItem('my_staff_base', JSON.stringify(staffDatabase));  
         updateDatalist();
         alert('База сотрудников обновлена!');
       } catch (err) { alert('Ошибка JSON базы'); }
@@ -246,7 +247,20 @@ if (staffFileInp) {
     				result[key] = names;
     			  }
     			}
-    		  });
-    
+    		  });    
     		  return result;
 		}
+
+// Автосохранение при любом изменении инпутов
+document.addEventListener('input', () => {
+  const currentSchedule = saveSchedule();
+  localStorage.setItem('my_current_schedule', JSON.stringify(currentSchedule));
+});
+
+// Автозагрузка расписания при старте страницы
+document.addEventListener('DOMContentLoaded', () => {
+  const savedSchedule = localStorage.getItem('my_current_schedule');
+  if (savedSchedule) {
+    loadSchedule(JSON.parse(savedSchedule));
+  }
+});
