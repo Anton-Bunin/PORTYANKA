@@ -50,20 +50,16 @@ function getJsonKey(category, brigadeCol) {
 function clearRowData(row) {
   const cells = row.cells;
   // Проверяем, что в строке физически есть хотя бы 5 ячеек, чтобы не было ошибки
-  if (cells && cells.length >= 5) {
     cells[2].textContent = ""; // ID
     cells[3].textContent = ""; // Роль
     cells[4].textContent = ""; // Дата
-  }
 }
 
 function fillRowData(row, info) {
   const cells = row.cells;
-  if (cells && cells.length >= 5) {
     cells[2].textContent = info.id || "";
     cells[3].textContent = info.role || "";
     cells[4].textContent = info.date || "";
-  }
 }
 
 function updateDatalist() {
