@@ -4,7 +4,7 @@
 // Пытаемся сразу достать сохраненную базу людей из памяти браузера
 let staffDatabase = JSON.parse(localStorage.getItem('my_staff_base')) || {};
 let allNames = Object.keys(staffDatabase);
-const datalist = document.getElementById('employees-list');
+let datalist = document.getElementById('employees-list');
 
 // --- МАППИНГ: соответствие JSON-ключей ячейкам таблицы ---
 const jsonToGridMap = {
@@ -65,6 +65,7 @@ function fillRowData(row, info) {
 }
 
 function updateDatalist() {
+  datalist = document.getElementById('employees-list'); // Ищем элемент прямо сейчас
   if (!datalist) return;
   datalist.innerHTML = "";
   allNames.forEach(name => {
