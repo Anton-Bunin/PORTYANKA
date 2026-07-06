@@ -48,18 +48,23 @@ function getJsonKey(category, brigadeCol) {
 // ==========================================
 
 function clearRowData(row) {
+  if (!row || !row.cells) return;
   const cells = row.cells;
-  // Проверяем, что в строке физически есть хотя бы 5 ячеек, чтобы не было ошибки
-    cells[2].textContent = ""; // ID
-    cells[3].textContent = ""; // Роль
-    cells[4].textContent = ""; // Дата
+  
+  // Безопасно очищаем ячейки, только если они физически существуют в этой строке
+  if (cells[2]) cells[2].textContent = ""; // ID
+  if (cells[3]) cells[3].textContent = ""; // Роль
+  if (cells[4]) cells[4].textContent = ""; // Дата
 }
 
 function fillRowData(row, info) {
+  if (!row || !row.cells || !info) return;
   const cells = row.cells;
-    cells[2].textContent = info.id || "";
-    cells[3].textContent = info.role || "";
-    cells[4].textContent = info.date || "";
+  
+  // Безопасно заполняем ячейки, только если они физически существуют в этой строке
+  if (cells[2]) cells[2].textContent = info.id || "";
+  if (cells[3]) cells[3].textContent = info.role || "";
+  if (cells[4]) cells[4].textContent = info.date || "";
 }
 
 function updateDatalist() {
@@ -164,7 +169,11 @@ function loadSchedule(data) {
 
   // Очищаем инпуты и ячейки перед загрузкой
   document.querySelectorAll('.emp-input').forEach(inp => inp.value = "");
-  rows.forEach(row => { if(!row.querySelector('.category-cell')) clearRowData(row); });
+  rows.forEach(row => { 
+    if (!row.querySelector('.category-cell') && row.querySelectorAll('.emp-input').length > 0) {
+      clearRowData(row); 
+    }
+  });
 
   const counters = {};
   for (const key of Object.keys(jsonToGridMap)) {
