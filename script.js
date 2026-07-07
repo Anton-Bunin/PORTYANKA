@@ -65,13 +65,24 @@ function fillRowData(row, info) {
 }
 
 function updateDatalist() {
-  const datalist = document.getElementById('employees-list'); // Ищем элемент прямо сейчас
-  if (!datalist) return;
-  datalist.innerHTML = "";
-  allNames.forEach(name => {
+  // Находим datalist прямо в момент вызова локально, чтобы не зависеть от глобального null
+  const currentDatalist = document.getElementById('employees-list');
+  if (!currentDatalist) return;
+
+  // Ваша оригинальная рабочая логика сбора занятых сотрудников по их классу
+  const busyNames = Array.from(document.querySelectorAll('.select-input'))
+    .map(input => input.value.trim())
+    .filter(Boolean);
+
+  // Ваша оригинальная фильтрация
+  const freeNames = allNames.filter(name => !busyNames.includes(name));
+
+  // Очищаем и заполняем список заново
+  currentDatalist.innerHTML = '';
+  freeNames.forEach(name => {
     const option = document.createElement('option');
     option.value = name;
-    datalist.appendChild(option);
+    currentDatalist.appendChild(option);
   });
 }
 
