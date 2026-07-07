@@ -192,50 +192,64 @@ function saveSchedule() {
 }
 
 function loadSchedule(data) {
-  if (!data) return;
-  const categoryRows = document.querySelectorAll('table > tbody > tr.category-row');
-
-  // Предварительная очистка всех инпутов и данных сотрудников
-  document.querySelectorAll('.select-input').forEach(inp => inp.value = "");
-  document.querySelectorAll('.emp-table tr').forEach(row => clearRowData(row));
-
-  const counters = {};
-  for (const key of Object.keys(jsonToGridMap)) {
-    counters[key] = 0;
-  }
-
-  categoryRows.forEach(row => {
-    const catCell = row.querySelector('.row-title');
-    if (!catCell) return;
-    const currentCategory = catCell.textContent.trim();
-
-    const brigadeCells = row.querySelectorAll('tr.category-row > td:not(.row-title)');
+     if (!data) return;
+      // 1. Предварительная очистка всех инпутов и текстовых данных в таблице
+      const allInputs = document.querySelectorAll('table .select-input');
+      allInputs.forEach(inp => {
+        inp.value = "";
+        const empRow = inp.closest('tr');
+        if (empRow) clearRowData(empRow);
+      });
     
-    brigadeCells.forEach((cell, index) => {
-      const brigadeCol = index + 1;
-      const key = getJsonKey(currentCategory, brigadeCol);
-      if (!key || !data[key]) return;
-
-      const list = data[key];
-      const inputs = cell.querySelectorAll('.select-input');
-
-      inputs.forEach(input => {
-        const currentIdx = counters[key];
-        if (currentIdx < list.length) {
-          const name = list[currentIdx];
-          input.value = name;
+      // 2. Инициализируем счетчики для каждого ключа маппинга
+      const counters = {};
+      for (const key of Object.keys(jsonToGridMap)) {
+        counters[key] = 0;
+      }
+    
+      // 3. Пробегаемся по всем инпутам на странице и наполняем их данными из JSON
+      allInputs.forEach(input => {
+        const empRow = input.closest('tr');
+        if (!empRow) return;
+    
+        // Находим главную строку («Старший» из thead или категории из tbody)
+        const mainRow = empRow.closest('.category-row, .sub-header');
+        if (!mainRow) return;
+    
+        // Читаем название категории
+        const catCell = mainRow.querySelector('.row-title');
+        if (!catCell) return;
+        const currentCategory = catCell.textContent.trim();
+    
+        // Определяем номер бригады по индексу родительского <td>
+        const parentTd = input.closest('table').closest('td');
+        if (!parentTd) return;
+        const brigadeCol = Array.from(mainRow.children).indexOf(parentTd);
+    
+        if (brigadeCol > 0) {
+          // Ищем уникальный JSON-ключ (например, br1-senior)
+          const key = getJsonKey(currentCategory, brigadeCol);
           
-          const empRow = input.closest('tr');
-          if (empRow && staffDatabase[name]) {
-            fillRowData(empRow, staffDatabase[name]);
+          // Если для этого ключа в сохраненном файле есть массив имен
+          if (key && data[key]) {
+            const list = data[key];
+            const currentIdx = counters[key];
+    
+            // Если в массиве еще остались люди, вставляем текущего
+            if (currentIdx < list.length) {
+              const name = list[currentIdx];
+              input.value = name;
+              
+              // Подгружаем карточку сотрудника (ID, роль, дату) из staffDatabase
+              if (staffDatabase[name]) {
+                fillRowData(empRow, staffDatabase[name]);
+              }
+              counters[key]++; // Сдвигаем счетчик для этой бригады и категории
+            }
           }
-          counters[key]++;
         }
       });
-    });
-  });
-
-  updateDatalist();
+      updateDatalist();
 }
 
 const btnSave = document.getElementById('btn-save');
