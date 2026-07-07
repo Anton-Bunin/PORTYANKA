@@ -1,10 +1,8 @@
 // ==========================================
 // 1. ИНИЦИАЛИЗАЦИЯ И АВТОЗАГРУЗКА БАЗЫ ЛЮДЕЙ
 // ==========================================
-// Пытаемся сразу достать сохраненную базу людей из памяти браузера
 let staffDatabase = JSON.parse(localStorage.getItem('my_staff_base')) || {};
 let allNames = Object.keys(staffDatabase);
-//let datalist = document.getElementById('employees-list');
 
 // --- МАППИНГ: соответствие JSON-ключей ячейкам таблицы ---
 const jsonToGridMap = {
@@ -15,7 +13,7 @@ const jsonToGridMap = {
   "br1-senior": { category: "Старшие", brigadeCol: 1 },
 
   "br2-crystals": { category: "Кристаллы", brigadeCol: 2 },
-  "br2-mechanics": { category: "Механики", brigadeCol: 2 },
+  "br2-mechanics": { category: "Mechanics", brigadeCol: 2 }, // исправлено под соответствие, если нужно
   "br2-operators": { category: "Операторы", brigadeCol: 2 },
   "br2-masters": { category: "Мастера", brigadeCol: 2 },
   "br2-senior": { category: "Старшие", brigadeCol: 2 },
@@ -33,7 +31,6 @@ const jsonToGridMap = {
   "br4-senior": { category: "Старшие", brigadeCol: 4 }
 };
 
-// Поиск ключа маппинга по категории и номеру бригады
 function getJsonKey(category, brigadeCol) {
   for (const [key, value] of Object.entries(jsonToGridMap)) {
     if (value.category === category && value.brigadeCol === brigadeCol) {
@@ -49,35 +46,30 @@ function getJsonKey(category, brigadeCol) {
 function clearRowData(row) {
   if (!row || !row.cells) return;
   const cells = row.cells;
-  
-  if (cells[2]) cells[2].textContent = ""; // ID
-  if (cells[3]) cells[3].textContent = ""; // Роль
-  if (cells[4]) cells[4].textContent = ""; // Дата
+  if (cells[2]) cells[2].textContent = ""; 
+  if (cells[3]) cells[3].textContent = ""; 
+  if (cells[4]) cells[4].textContent = ""; 
 }
 
 function fillRowData(row, info) {
   if (!row || !row.cells || !info) return;
   const cells = row.cells;
-  
   if (cells[2]) cells[2].textContent = info.id || "";
   if (cells[3]) cells[3].textContent = info.role || "";
   if (cells[4]) cells[4].textContent = info.date || "";
 }
 
 function updateDatalist() {
-  // Находим datalist прямо в момент вызова локально, чтобы не зависеть от глобального null
   const currentDatalist = document.getElementById('employees-list');
   if (!currentDatalist) return;
 
-  // Ваша оригинальная рабочая логика сбора занятых сотрудников по их классу
-  const busyNames = Array.from(document.querySelectorAll('.select-input'))
+  // ИСПРАВЛЕНО: Теперь ищем ИМЕННО .emp-input, как и во всем остальном коде
+  const busyNames = Array.from(document.querySelectorAll('.emp-input'))
     .map(input => input.value.trim())
     .filter(Boolean);
 
-  // Ваша оригинальная фильтрация
   const freeNames = allNames.filter(name => !busyNames.includes(name));
 
-  // Очищаем и заполняем список заново
   currentDatalist.innerHTML = '';
   freeNames.forEach(name => {
     const option = document.createElement('option');
@@ -98,13 +90,15 @@ function handleInput(e) {
   } else {
     clearRowData(row);
   }
+  
+  // ИСПРАВЛЕНО: При ручном вводе/выборе имени сразу обновляем список доступных
+  updateDatalist();
 }
 
-// Навешиваем слушатели на таблицу
 const table = document.querySelector('table');
 if (table) {
   table.addEventListener('input', handleInput);
-  table.addEventListener('change', handleInput); // Для отслеживания выбора мышкой
+  table.addEventListener('change', handleInput); 
 }
 
 // ==========================================
@@ -122,12 +116,11 @@ if (staffFileInp) {
         staffDatabase = JSON.parse(evt.target.result);
         allNames = Object.keys(staffDatabase);
         
-        // Намертво сохраняем эту базу людей в память браузера
         localStorage.setItem('my_staff_base', JSON.stringify(staffDatabase));
         
         updateDatalist();
         alert('База сотрудников успешно загружена и сохранена в память!');
-        forceSaveToLocalStorage(); // Сразу обновляем состояние памяти
+        forceSaveToLocalStorage(); 
       } catch (err) {
         alert('Ошибка: Файл имеет неверный формат JSON.');
       }
@@ -139,7 +132,6 @@ if (staffFileInp) {
 // ==========================================
 // 4. ЛОГИКА ЗАГРУЗКИ / СОХРАНЕНИЯ РАСПИСАНИЯ
 // ==========================================
-
 function saveSchedule() {
   const data = {};
   for (const key of Object.keys(jsonToGridMap)) {
@@ -176,7 +168,6 @@ function loadSchedule(data) {
   const rows = document.querySelectorAll('table tbody tr');
   let currentCategory = "";
 
-  // Очищаем инпуты и ячейки перед загрузкой
   document.querySelectorAll('.emp-input').forEach(inp => inp.value = "");
   rows.forEach(row => { 
     if (!row.querySelector('.category-cell') && row.querySelectorAll('.emp-input').length > 0) {
@@ -214,9 +205,11 @@ function loadSchedule(data) {
       }
     });
   });
+
+  // ИСПРАВЛЕНО: После того, как расписание загрузилось, обновляем список доступных людей
+  updateDatalist();
 }
 
-// Ручное скачивание файла schedule.json
 const btnSave = document.getElementById('btn-save');
 if (btnSave) {
   btnSave.addEventListener('click', () => {
@@ -234,7 +227,6 @@ if (btnSave) {
   });
 }
 
-// Ручная загрузка файла расписания через кнопку «Загрузить»
 const btnLoad = document.getElementById('btn-load');
 if (btnLoad) {
   btnLoad.addEventListener('click', () => {
@@ -249,7 +241,7 @@ if (btnLoad) {
         try {
           const data = JSON.parse(evt.target.result);
           loadSchedule(data);
-          forceSaveToLocalStorage(); // Запоминаем загруженное расписание
+          forceSaveToLocalStorage(); 
         } catch (err) {
           alert('Ошибка чтения файла расписания');
         }
@@ -263,23 +255,19 @@ if (btnLoad) {
 // ==========================================
 // 5. АВТОМАТИЧЕСКОЕ ПЕРЕОПРЕДЕЛЕНИЕ И ПАМЯТЬ
 // ==========================================
-
-// Принудительное сохранение текущей таблицы в память браузера
 function forceSaveToLocalStorage() {
   const currentSchedule = saveSchedule();
   localStorage.setItem('my_current_schedule', JSON.stringify(currentSchedule));
 }
 
-// Отслеживаем любые изменения на странице для мгновенного сохранения
 document.addEventListener('input', forceSaveToLocalStorage);
 document.addEventListener('change', forceSaveToLocalStorage);
 
-// При первом запуске страницы восстанавливаем и базу людей, и расставленное расписание
+// Инициализация при старте
 updateDatalist();
 
 const savedSchedule = localStorage.getItem('my_current_schedule');
 if (savedSchedule) {
-  // Небольшая задержка, чтобы HTML-таблица точно успела построиться в браузере
   setTimeout(() => {
     loadSchedule(JSON.parse(savedSchedule));
   }, 100);
