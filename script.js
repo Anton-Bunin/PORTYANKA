@@ -13,7 +13,7 @@ const jsonToGridMap = {
   "br1-senior": { category: "Старшие", brigadeCol: 1 },
 
   "br2-crystals": { category: "Кристаллы", brigadeCol: 2 },
-  "br2-mechanics": { category: "Mechanics", brigadeCol: 2 }, // исправлено под соответствие, если нужно
+  "br2-mechanics": { category: "Механики", brigadeCol: 2 },
   "br2-operators": { category: "Операторы", brigadeCol: 2 },
   "br2-masters": { category: "Мастера", brigadeCol: 2 },
   "br2-senior": { category: "Старшие", brigadeCol: 2 },
@@ -43,28 +43,37 @@ function getJsonKey(category, brigadeCol) {
 // ==========================================
 // 2. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ДЛЯ ТАБЛИЦЫ
 // ==========================================
+
+// Очистка ячеек внутри строки конкретного сотрудника
 function clearRowData(row) {
-  if (!row || !row.cells) return;
-  const cells = row.cells;
-  if (cells[2]) cells[2].textContent = ""; 
-  if (cells[3]) cells[3].textContent = ""; 
-  if (cells[4]) cells[4].textContent = ""; 
+  if (!row) return;
+  const idCell = row.querySelector('.col-id');
+  const roleCell = row.querySelector('.col-role');
+  const dateCell = row.querySelector('.col-date');
+  
+  if (idCell) idCell.textContent = "";
+  if (roleCell) roleCell.textContent = "";
+  if (dateCell) dateCell.textContent = "";
 }
 
+// Заполнение ячеек внутри строки конкретного сотрудника
 function fillRowData(row, info) {
-  if (!row || !row.cells || !info) return;
-  const cells = row.cells;
-  if (cells[2]) cells[2].textContent = info.id || "";
-  if (cells[3]) cells[3].textContent = info.role || "";
-  if (cells[4]) cells[4].textContent = info.date || "";
+  if (!row || !info) return;
+  const idCell = row.querySelector('.col-id');
+  const roleCell = row.querySelector('.col-role');
+  const dateCell = row.querySelector('.col-date');
+  
+  if (idCell) idCell.textContent = info.id || "";
+  if (roleCell) roleCell.textContent = info.role || "";
+  if (dateCell) dateCell.textContent = info.date || "";
 }
 
 function updateDatalist() {
   const currentDatalist = document.getElementById('employees-list');
   if (!currentDatalist) return;
 
-  // ИСПРАВЛЕНО: Теперь ищем ИМЕННО .emp-input, как и во всем остальном коде
-  const busyNames = Array.from(document.querySelectorAll('.emp-input'))
+  // Собираем имена по вашему реальному классу select-input
+  const busyNames = Array.from(document.querySelectorAll('.select-input'))
     .map(input => input.value.trim())
     .filter(Boolean);
 
@@ -79,10 +88,10 @@ function updateDatalist() {
 }
 
 function handleInput(e) {
-  if (!e.target.classList.contains('emp-input')) return;
+  if (!e.target.classList.contains('select-input')) return;
   const input = e.target;
   const val = input.value.trim();
-  const row = input.closest('tr');
+  const row = input.closest('tr'); // Ищет строку именно этого сотрудника
   if (!row) return;
 
   if (staffDatabase[val]) {
@@ -91,7 +100,6 @@ function handleInput(e) {
     clearRowData(row);
   }
   
-  // ИСПРАВЛЕНО: При ручном вводе/выборе имени сразу обновляем список доступных
   updateDatalist();
 }
 
@@ -138,26 +146,29 @@ function saveSchedule() {
     data[key] = [];
   }
 
-  const rows = document.querySelectorAll('table tbody tr');
-  let currentCategory = "";
+  const categoryRows = document.querySelectorAll('table > tbody > tr.category-row');
 
-  rows.forEach(row => {
-    const catCell = row.querySelector('.category-cell');
-    if (catCell) {
-      currentCategory = catCell.textContent.trim();
-    }
-    if (!currentCategory) return;
+  categoryRows.forEach(row => {
+    const catCell = row.querySelector('.row-title');
+    if (!catCell) return;
+    const currentCategory = catCell.textContent.trim();
 
-    const inputs = row.querySelectorAll('.emp-input');
-    inputs.forEach((input, index) => {
+    // Находим все ячейки бригад (td) в этой строке категории
+    const brigadeCells = row.querySelectorAll('tr.category-row > td:not(.row-title)');
+    
+    brigadeCells.forEach((cell, index) => {
       const brigadeCol = index + 1;
-      const name = input.value.trim();
-      if (name) {
-        const key = getJsonKey(currentCategory, brigadeCol);
-        if (key) {
-          data[key].push(name);
+      const inputs = cell.querySelectorAll('.select-input');
+      
+      inputs.forEach(input => {
+        const name = input.value.trim();
+        if (name) {
+          const key = getJsonKey(currentCategory, brigadeCol);
+          if (key) {
+            data[key].push(name);
+          }
         }
-      }
+      });
     });
   });
   return data;
@@ -165,48 +176,48 @@ function saveSchedule() {
 
 function loadSchedule(data) {
   if (!data) return;
-  const rows = document.querySelectorAll('table tbody tr');
-  let currentCategory = "";
+  const categoryRows = document.querySelectorAll('table > tbody > tr.category-row');
 
-  document.querySelectorAll('.emp-input').forEach(inp => inp.value = "");
-  rows.forEach(row => { 
-    if (!row.querySelector('.category-cell') && row.querySelectorAll('.emp-input').length > 0) {
-      clearRowData(row); 
-    }
-  });
+  // Предварительная очистка всех инпутов и данных сотрудников
+  document.querySelectorAll('.select-input').forEach(inp => inp.value = "");
+  document.querySelectorAll('.emp-table tr').forEach(row => clearRowData(row));
 
   const counters = {};
   for (const key of Object.keys(jsonToGridMap)) {
     counters[key] = 0;
   }
 
-  rows.forEach(row => {
-    const catCell = row.querySelector('.category-cell');
-    if (catCell) {
-      currentCategory = catCell.textContent.trim();
-    }
-    if (!currentCategory) return;
+  categoryRows.forEach(row => {
+    const catCell = row.querySelector('.row-title');
+    if (!catCell) return;
+    const currentCategory = catCell.textContent.trim();
 
-    const inputs = row.querySelectorAll('.emp-input');
-    inputs.forEach((input, index) => {
+    const brigadeCells = row.querySelectorAll('tr.category-row > td:not(.row-title)');
+    
+    brigadeCells.forEach((cell, index) => {
       const brigadeCol = index + 1;
       const key = getJsonKey(currentCategory, brigadeCol);
-      if (key && data[key]) {
-        const list = data[key];
+      if (!key || !data[key]) return;
+
+      const list = data[key];
+      const inputs = cell.querySelectorAll('.select-input');
+
+      inputs.forEach(input => {
         const currentIdx = counters[key];
         if (currentIdx < list.length) {
           const name = list[currentIdx];
           input.value = name;
-          if (staffDatabase[name]) {
-            fillRowData(row, staffDatabase[name]);
+          
+          const empRow = input.closest('tr');
+          if (empRow && staffDatabase[name]) {
+            fillRowData(empRow, staffDatabase[name]);
           }
           counters[key]++;
         }
-      }
+      });
     });
   });
 
-  // ИСПРАВЛЕНО: После того, как расписание загрузилось, обновляем список доступных людей
   updateDatalist();
 }
 
@@ -263,7 +274,7 @@ function forceSaveToLocalStorage() {
 document.addEventListener('input', forceSaveToLocalStorage);
 document.addEventListener('change', forceSaveToLocalStorage);
 
-// Инициализация при старте
+// Инициализация при старте страницы
 updateDatalist();
 
 const savedSchedule = localStorage.getItem('my_current_schedule');
