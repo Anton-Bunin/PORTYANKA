@@ -157,37 +157,38 @@ if (staffFileInp) {
 // 4. ЛОГИКА ЗАГРУЗКИ / СОХРАНЕНИЯ РАСПИСАНИЯ
 // ==========================================
 function saveSchedule() {
-  const data = {};
-  for (const key of Object.keys(jsonToGridMap)) {
-    data[key] = [];
-  }
-
-  const categoryRows = document.querySelectorAll('table > tbody > tr.category-row');
-
-  categoryRows.forEach(row => {
-    const catCell = row.querySelector('.row-title');
-    if (!catCell) return;
-    const currentCategory = catCell.textContent.trim();
-
-    // Находим все ячейки бригад (td) в этой строке категории
-    const brigadeCells = row.querySelectorAll('tr.category-row > td:not(.row-title)');
-    
-    brigadeCells.forEach((cell, index) => {
-      const brigadeCol = index + 1;
-      const inputs = cell.querySelectorAll('.select-input');
-      
-      inputs.forEach(input => {
-        const name = input.value.trim();
-        if (name) {
-          const key = getJsonKey(currentCategory, brigadeCol);
-          if (key) {
-            data[key].push(name);
-          }
-        }
-      });
-    });
-  });
-  return data;
+        const data = {};
+        for (const key of Object.keys(jsonToGridMap)) {
+          data[key] = [];
+        }      
+        // 1. Находим абсолютно ВСЕ инпуты выбора сотрудников на странице
+        const allInputs = document.querySelectorAll('table .select-input');      
+        allInputs.forEach(input => {
+            const name = input.value.trim();
+            if (!name) return; // Если ячейка пустая, пропускаем её      
+            // 2. Поднимаемся к строке сотрудника <tr>
+            const empRow = input.closest('tr');
+            if (!empRow) return;      
+            // 3. Поднимаемся выше — к главной строке категории (родителю вложенной таблицы)
+            const mainRow = empRow.closest('.category-row, .sub-header');
+            if (!mainRow) return;      
+            // 4. Достаем название категории («Старший», «Кристаллы» и т.д.)
+            const catCell = mainRow.querySelector('.row-title');
+            if (!catCell) return;
+            const currentCategory = catCell.textContent.trim();      
+            // 5. Определяем номер бригады (какой по счету идет td внутри главной строки)
+            const parentTd = input.closest('table').closest('td');
+            if (!parentTd) return;          
+            // Получаем индекс td среди всех соседей и прибавляем 1 (так как индекс с 0)
+            const brigadeCol = Array.from(mainRow.children).indexOf(parentTd);      
+            if (brigadeCol > 0) { // Проверяем, что это не колонка с названием
+              const key = getJsonKey(currentCategory, brigadeCol);
+              if (key) {
+                data[key].push(name); // Записываем имя в нужный ключ смены
+              }
+            }
+        });
+        return data;
 }
 
 function loadSchedule(data) {
