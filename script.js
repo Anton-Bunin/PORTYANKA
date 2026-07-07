@@ -264,7 +264,7 @@ document.addEventListener('input', forceSaveToLocalStorage);
 document.addEventListener('change', forceSaveToLocalStorage);
 
 // При первом запуске страницы восстанавливаем и базу людей, и расставленное расписание
-updateDatalist();
+//updateDatalist();
 
 const savedSchedule = localStorage.getItem('my_current_schedule');
 if (savedSchedule) {
