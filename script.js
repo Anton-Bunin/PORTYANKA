@@ -6,29 +6,45 @@ let allNames = Object.keys(staffDatabase);
 
 // --- МАППИНГ: соответствие JSON-ключей ячейкам таблицы ---
 const jsonToGridMap = {
+  // === БРИГАДА 1 ===
+  "br1-senior": { category: "Старший", brigadeCol: 1 },
   "br1-crystals": { category: "Кристаллы", brigadeCol: 1 },
-  "br1-mechanics": { category: "Механики", brigadeCol: 1 },
-  "br1-operators": { category: "Операторы", brigadeCol: 1 },
-  "br1-masters": { category: "Мастера", brigadeCol: 1 },
-  "br1-senior": { category: "Старшие", brigadeCol: 1 },
+  "br1-fiter": { category: "Фильтра", brigadeCol: 1 },
+  "br1-regeneration": { category: "Регенерация", brigadeCol: 1 },
+  "br1-compressor": { category: "Машинисты ЦК", brigadeCol: 1 },
+  "br1-pump": { category: "Насосы", brigadeCol: 1 },
+  "br1-vakation": { category: "Отпуска", brigadeCol: 1 },
+  "br1-sickleave": { category: "Больничный", brigadeCol: 1 },
 
+  // === БРИГАДА 2 ===
+  "br2-senior": { category: "Старший", brigadeCol: 2 },
   "br2-crystals": { category: "Кристаллы", brigadeCol: 2 },
-  "br2-mechanics": { category: "Механики", brigadeCol: 2 },
-  "br2-operators": { category: "Операторы", brigadeCol: 2 },
-  "br2-masters": { category: "Мастера", brigadeCol: 2 },
-  "br2-senior": { category: "Старшие", brigadeCol: 2 },
+  "br2-fiter": { category: "Фильтра", brigadeCol: 2 },
+  "br2-regeneration": { category: "Регенерация", brigadeCol: 2 },
+  "br2-compressor": { category: "Машинисты ЦК", brigadeCol: 2 },
+  "br2-pump": { category: "Насосы", brigadeCol: 2 },
+  "br2-vakation": { category: "Отпуска", brigadeCol: 2 },
+  "br2-sickleave": { category: "Больничный", brigadeCol: 2 },
 
+  // === БРИГАДА 3 ===
+  "br3-senior": { category: "Старший", brigadeCol: 3 },
   "br3-crystals": { category: "Кристаллы", brigadeCol: 3 },
-  "br3-mechanics": { category: "Механики", brigadeCol: 3 },
-  "br3-operators": { category: "Операторы", brigadeCol: 3 },
-  "br3-masters": { category: "Мастера", brigadeCol: 3 },
-  "br3-senior": { category: "Старшие", brigadeCol: 3 },
+  "br3-fiter": { category: "Фильтра", brigadeCol: 3 },
+  "br3-regeneration": { category: "Регенерация", brigadeCol: 3 },
+  "br3-compressor": { category: "Машинисты ЦК", brigadeCol: 3 },
+  "br3-pump": { category: "Насосы", brigadeCol: 3 },
+  "br3-vakation": { category: "Отпуска", brigadeCol: 3 },
+  "br3-sickleave": { category: "Больничный", brigadeCol: 3 },
 
+  // === БРИГАДА 4 ===
+  "br4-senior": { category: "Старший", brigadeCol: 4 }, // Проверьте, в HTML "Старший" или "Старшие" для Бр4. На скрипте вроде везде "Старший"
   "br4-crystals": { category: "Кристаллы", brigadeCol: 4 },
-  "br4-mechanics": { category: "Механики", brigadeCol: 4 },
-  "br4-operators": { category: "Операторы", brigadeCol: 4 },
-  "br4-masters": { category: "Мастера", brigadeCol: 4 },
-  "br4-senior": { category: "Старшие", brigadeCol: 4 }
+  "br4-fiter": { category: "Фильтра", brigadeCol: 4 },
+  "br4-regeneration": { category: "Регенерация", brigadeCol: 4 },
+  "br4-compressor": { category: "Машинисты ЦК", brigadeCol: 4 },
+  "br4-pump": { category: "Насосы", brigadeCol: 4 },
+  "br4-vakation": { category: "Отпуска", brigadeCol: 4 },
+  "br4-sickleave": { category: "Больничный", brigadeCol: 4 }
 };
 
 function getJsonKey(category, brigadeCol) {
