@@ -76,8 +76,8 @@
             vertical-align: middle;
             overflow: hidden;
             white-space: nowrap;
-        }               		
-        /* Внутренняя таблица (Строго фиксированная сетка) */
+	 }               		
+		/* Внутренняя таблица (Строго фиксированная сетка) */
         .emp-table {
             width: 100%;
             border-collapse: collapse;
@@ -99,7 +99,7 @@
         .col-name { width: 56%; }
         .col-role { width: 16%; color: #555; text-align: center; }
         .col-date { width: 16%; color: #c00000; text-align: right; font-size: 10px; }		
-        /* Точные пропорции внутренних колонок внутри 100% ширины бригады (СТАРШИЕ)*/
+		/* Точные пропорции внутренних колонок внутри 100% ширины бригады (СТАРШИЕ)*/
         .colST-id   { width: 12%; color: #000; text-align: center; font-weight: bold; }
         .colST-name { width: 56%; color: #000; text-align: center; font-weight: bold; }
         .colST-role { width: 16%; color: #000; text-align: center; font-weight: bold; }
@@ -119,28 +119,27 @@
         /* Фоновые цвета */
         .bg-yellow, .bg-yellow td { background-color: #fff2cc !important; }
         .bg-gray { background-color: #f2f2f2 !important; }
-        .bg-green { background-color: #48A43F !important; }
+		.bg-green { background-color: #48A43F !important; }
     </style>
 </head>
 <body>
     <!-- Список сотрудников -->
     <datalist id="employees-list"></datalist>
-
-    <div class="header-top">
-        <span>Сегодня &gt; 6 Июля! 2026 &lt;</span>
-        <div style="float: right;">
-            <label style="background-color: #4a90e2; color: white; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px;">
-                👥 База из сети
-                <input type="file" id="staff-file-input" accept=".json" style="display: none;">
-            </label>
-            <button type="button" id="btn-load">Загрузить</button>
-            <button type="button" id="btn-save">Сохранить</button>
-        </div>
+<div class="header-top">
+    <span>Сегодня &gt; 6 Июля! 2026 &lt;</span>
+    <div style="float: right;">
+		<!-- Новое поле для загрузки базы сотрудников из вашей локальной сети -->
+		<label style="background-color: #4a90e2; color: white; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px;">
+			👥 База из сети
+			<input type="file" id="staff-file-input" accept=".json" style="display: none;">
+		</label>
+        <button type="button" id="btn-load">Загрузить</button>
+        <button type="button" id="btn-save">Сохранить</button>
     </div>
-
+</div>
     <table class="schedule-table">
         <thead>
-            <tr class="brigade-headers">
+			<tr class="brigade-headers">
                 <th class="row-title"></th>
                 <th>Бр 1</th><th>Бр 2</th><th>Бр 3</th><th>Бр 4</th><th>Работа в выходные дни</th>
             </tr>
@@ -194,21 +193,11 @@
                 <td></td>
             </tr>
         </thead>        
-        <tbody>
-            <!-- КРИСТАЛЛЫ -->
-            <tr class="category-row">
-                <td class="row-title">Кристаллы</td> 
-				<!-- Бр 1 -->
-                <td>
-                    <table class="emp-table">
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                    </table>
-                </td>    
-				<!-- Бр 2 -->
+		
+		<tbody>            
+        <tr class="category-row">
+                <td class="row-title">Кристаллы</td>                
+                <!-- Бр 1 -->
                 <td>
                     <table class="emp-table">
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
@@ -218,18 +207,7 @@
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                     </table>
                 </td>                
-                <td>
-				<!-- Бр 3 -->
-                <td>
-                    <table class="emp-table">
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                    </table>
-                </td>    
-				<!-- Бр 4 -->
+                <!-- Бр 2-->
                 <td>
                     <table class="emp-table">
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
@@ -239,15 +217,7 @@
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                     </table>
                 </td>                
-                <td>				
-                <!-- Выходные -->
-                <td></td>
-		    </tr>	
-			
-            <!-- ФИЛЬТРА -->
-            <tr class="category-row">
-                <td class="row-title">Фильтра</td> 
-				<!-- Бр 1 -->
+                <!-- Бр 3 -->
                 <td>
                     <table class="emp-table">
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
@@ -256,8 +226,37 @@
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                     </table>
-                </td>    
-				<!-- Бр 2 -->
+                </td>
+                <!-- Бр 4 -->
+                <td>
+                    <table class="emp-table">
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+					</table>
+                </td> 				
+			<td class="row-title">список</td>                
+                <td>
+                    <table class="emp-table">
+                  
+				    </table>
+                </td>
+			</tr>
+		<tr class="category-row">
+                <td class="row-title">Фильтра</td>
+<!-- Бр 1 -->
+                <td>
+                    <table class="emp-table">
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+					</table>
+                </td>                
+                <!-- Бр 2-->
                 <td>
                     <table class="emp-table">
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
@@ -267,18 +266,7 @@
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                     </table>
                 </td>                
-                <td>
-				<!-- Бр 3 -->
-                <td>
-                    <table class="emp-table">
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                    </table>
-                </td>    
-				<!-- Бр 4 -->
+                <!-- Бр 3 -->
                 <td>
                     <table class="emp-table">
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
@@ -287,15 +275,8 @@
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                     </table>
-                </td>                
-                <td>				
-                <!-- Выходные -->
-                <td></td>
-		    </tr>					
-            <!-- РЕГЕНЕРАЦИЯ -->
-            <tr class="category-row">
-                <td class="row-title">Регенерация</td> 
-				<!-- Бр 1 -->
+                </td>
+                <!-- Бр 4 -->
                 <td>
                     <table class="emp-table">
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
@@ -303,9 +284,12 @@
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                    </table>
-                </td>    
-				<!-- Бр 2 -->
+					</table>
+                </td> 				
+		</tr>		
+		<tr class="category-row">
+                <td class="row-title">Регенерация</td> 	
+<!-- Бр 1 -->
                 <td>
                     <table class="emp-table">
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
@@ -315,18 +299,7 @@
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                     </table>
                 </td>                
-                <td>
-				<!-- Бр 3 -->
-                <td>
-                    <table class="emp-table">
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                    </table>
-                </td>    
-				<!-- Бр 4 -->
+                <!-- Бр 2-->
                 <td>
                     <table class="emp-table">
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
@@ -336,14 +309,7 @@
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                     </table>
                 </td>                
-                <td>				
-                <!-- Выходные -->
-                <td></td>
-		    </tr>					
-            <!-- МАШИНИСТЫ ЦК -->
-            <tr class="category-row">
-                <td class="row-title">Машинисты ЦК</td> 
-				<!-- Бр 1 -->
+                <!-- Бр 3 -->
                 <td>
                     <table class="emp-table">
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
@@ -352,8 +318,8 @@
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                     </table>
-                </td>    
-				<!-- Бр 2 -->
+                </td>
+                <!-- Бр 4 -->
                 <td>
                     <table class="emp-table">
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
@@ -361,20 +327,12 @@
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                    </table>
-                </td>                
-                <td>
-				<!-- Бр 3 -->
-                <td>
-                    <table class="emp-table">
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                    </table>
-                </td>    
-				<!-- Бр 4 -->
+					</table>
+                </td> 
+		</tr>			
+		<tr class="category-row">
+                <td class="row-title">Машинисты ЦК</td> 	
+<!-- Бр 1 -->
                 <td>
                     <table class="emp-table">
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
@@ -384,24 +342,7 @@
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                     </table>
                 </td>                
-                <td>				
-                <!-- Выходные -->
-                <td></td>
-		    </tr>					
-            <!-- НАСОСЫ -->
-            <tr class="category-row">
-                <td class="row-title">Насосы</td> 
-				<!-- Бр 1 -->
-                <td>
-                    <table class="emp-table">
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                    </table>
-                </td>    
-				<!-- Бр 2 -->
+                <!-- Бр 2-->
                 <td>
                     <table class="emp-table">
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
@@ -411,18 +352,7 @@
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                     </table>
                 </td>                
-                <td>
-				<!-- Бр 3 -->
-                <td>
-                    <table class="emp-table">
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                    </table>
-                </td>    
-				<!-- Бр 4 -->
+                <!-- Бр 3 -->
                 <td>
                     <table class="emp-table">
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
@@ -431,62 +361,96 @@
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                     </table>
+                </td>
+                <!-- Бр 4 -->
+                <td>
+                    <table class="emp-table">
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+					</table>
+                </td> 
+		</tr>		
+		<tr class="category-row">
+                <td class="row-title">Насосы</td> 	<!-- Бр 1 -->
+                <td>
+                    <table class="emp-table">
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+				   </table>
                 </td>                
-                <td>				
-                <!-- Выходные -->
-                <td></td>
-		    </tr>	
-			
-           <!-- ОТПУСКА -->
-            <tr class="category-row">
+                <!-- Бр 2-->
+                <td>
+                    <table class="emp-table">
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+					</table>
+                </td>                
+                <!-- Бр 3 -->
+                <td>
+                    <table class="emp-table">
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+                    </table>
+                </td>
+                <!-- Бр 4 -->
+                <td>
+                    <table class="emp-table">
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+					</table>
+                </td> 
+		</tr>			
+		<tr class="category-row">
                 <td class="row-title">Отпуска</td> 
 				<!-- Бр 1 -->
                 <td>
                     <table class="emp-table">
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                    </table>
-                </td>    
-				<!-- Бр 2 -->
-                <td>
-                    <table class="emp-table">
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+						<tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                     </table>
                 </td>                
-                <td>
-				<!-- Бр 3 -->
-                <td>
-                    <table class="emp-table">
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
-                    </table>
-                </td>    
-				<!-- Бр 4 -->
+                <!-- Бр 2-->
                 <td>
                     <table class="emp-table">
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+						<tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
                     </table>
                 </td>                
-                <td>				
-                <!-- Выходные -->
-                <td></td>
-		    </tr>				
-            <!-- БОЛЬНИЧНЫЙ  -->
-            <tr class="category-row">
+                <!-- Бр 3 -->
+                <td>
+                    <table class="emp-table">
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+						<tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+                    </table>
+                </td>
+                <!-- Бр 4 -->
+                <td>
+                    <table class="emp-table">
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+						<tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+                        <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
+					</table>
+                </td> 
+		</tr>			
+		<tr class="category-row">
                 <td class="row-title">Больничный</td> 	
 				<!-- Бр 1 -->
                 <td>
@@ -532,13 +496,7 @@
                         <tr><td class="col-id"></td><td class="col-name"><input type="text" list="employees-list" class="select-input"></td><td class="col-role"></td><td class="col-date"></td></tr>
 					</table>
                 </td> 
-                <!-- Выходные -->
-                <td></td>
-		    </tr>	
-        </tbody>
-    </table>
-
-    <!-- Подключение скрипта логики -->
-    <script src="script.js"></script>
+		</tr>	
+	<script src="script.js"></script>
 </body>
 </html>
