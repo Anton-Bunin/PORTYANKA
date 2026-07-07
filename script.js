@@ -63,9 +63,10 @@ function getJsonKey(category, brigadeCol) {
 // Очистка ячеек внутри строки конкретного сотрудника
 function clearRowData(row) {
   if (!row) return;
-  const idCell = row.querySelector('.col-id');
-  const roleCell = row.querySelector('.col-role');
-  const dateCell = row.querySelector('.col-date');
+  // Ищем либо обычный класс, ЛИБО класс старшего с приставкой ST
+  const idCell = row.querySelector('.col-id, .colST-id');
+  const roleCell = row.querySelector('.col-role, .colST-role');
+  const dateCell = row.querySelector('.col-date, .colST-date');
   
   if (idCell) idCell.textContent = "";
   if (roleCell) roleCell.textContent = "";
@@ -75,9 +76,10 @@ function clearRowData(row) {
 // Заполнение ячеек внутри строки конкретного сотрудника
 function fillRowData(row, info) {
   if (!row || !info) return;
-  const idCell = row.querySelector('.col-id');
-  const roleCell = row.querySelector('.col-role');
-  const dateCell = row.querySelector('.col-date');
+  // Ищем либо обычный класс, ЛИБО класс старшего с приставкой ST
+  const idCell = row.querySelector('.col-id, .colST-id');
+  const roleCell = row.querySelector('.col-role, .colST-role');
+  const dateCell = row.querySelector('.col-date, .colST-date');
   
   if (idCell) idCell.textContent = info.id || "";
   if (roleCell) roleCell.textContent = info.role || "";
